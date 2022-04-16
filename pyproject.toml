@@ -7,6 +7,10 @@ authors = ["Fabian Eulitz <dev@sustineo.de>"]
 documentation = ""
 repository = ""
 keywords = ["spotify", "utils"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+spotify-utils = "spotify_utils.main:app"
 
 [tool.poetry.dependencies]
 python = "^3.10"

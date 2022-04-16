@@ -1,17 +1,18 @@
-from typing import Type
+# Built-in modules
+import importlib.metadata
+
+# PyPi modules
 import typer
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-from config import settings
 
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=settings.SPOTIPY_CLIENT_ID,
-                     client_secret=settings.SPOTIPY_CLIENT_SECRET, redirect_uri=settings.SPOTIPY_REDIRECT_URI, scope=settings.SCOPE))
+# Local modules
+from spotify_utils.src import playlists
 
+# Global variables
+__version__ = importlib.metadata.version("spotify-utils")
 
-def main():
-    test = sp.current_user_playlists()
-    print(test)
-
+# Initialize Typer and populate commands
+app = typer.Typer(help=f"spotify-utils: Version {__version__}")
+app.add_typer(playlists.app, name="playlists")
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
