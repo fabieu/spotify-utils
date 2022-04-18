@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spotify-utils"
-version = "0.1.1"
+version = "0.2.0"
 description = "spotify-utils is yet another spotify client, but for specific utility tasks"
 license = "MIT"
 authors = ["Fabian Eulitz <dev@sustineo.de>"]
@@ -17,6 +17,8 @@ python = "^3.10"
 spotipy = "^2.19.0"
 typer = "^0.4.0"
 dynaconf = "^3.1.7"
+click-spinner = "^0.1.10"
+tabulate = "^0.8.9"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.6.0"

@@ -1,9 +1,12 @@
 # Built-in modules
 from pathlib import Path
-from tabnanny import verbose
+from typing import Optional
 
 # PyPi modules
 import typer
+import click_spinner
+from tabulate import tabulate
+import spotipy.exceptions
 
 # Local modules
 from spotify_utils.src.auth import session
@@ -14,13 +17,35 @@ app = typer.Typer()
 
 
 @app.command()
+def list():
+    """
+    List all playlists of the current user
+    """
+    playlists = session.current_user_playlists()
+    table = []
+    while playlists:
+        for playlist in playlists['items']:
+            playlist_name = playlist['name']
+            playlist_owner = playlist['owner']['display_name']
+            playlist_url = playlist['external_urls']['spotify']
+            playlist_id = playlist['id']
+            table.append([playlist_name, playlist_owner, playlist_id, playlist_url])
+        if playlists['next']:
+            playlists = session.next(playlists)
+        else:
+            break
+
+    typer.echo(tabulate(table, headers=["name", "owner", "id", "url"], showindex=True, tablefmt="simple"))
+
+
+@app.command()
 def duplicates(verbose: bool = typer.Option(False, "--verbose", "-v")):
     """
-    Find duplicates in playlists which are owned by the current authenticated user
+    Find duplicates in playlists which are owned by the current user
     """
     current_user = user.get_details()
-
     playlists = session.current_user_playlists()
+
     owned_playlists = []
     while playlists:
         for playlist in playlists['items']:
@@ -29,42 +54,68 @@ def duplicates(verbose: bool = typer.Option(False, "--verbose", "-v")):
         if playlists['next']:
             playlists = session.next(playlists)
         else:
-            playlists = None
+            break
+
+    seen_tracks = set()
+    duplicate_tracks = []
 
     for playlist in owned_playlists:
-        tracks = session.playlist_items(playlist['id'])
+        with click_spinner.spinner():
+            tracks = session.playlist_items(playlist['id'])
 
-        seen_tracks = set()
-        duplicate_tracks = []
-
-        while tracks:
-            for track in tracks['items']:
-                track_id = track['track']['id']
-                if track_id not in seen_tracks:
-                    seen_tracks.add(track_id)
+            # Check if track has already been seen - Uniqueness based on track id
+            while tracks:
+                for track in tracks['items']:
+                    track_id = track['track']['id']
+                    if track_id not in seen_tracks:
+                        seen_tracks.add(track_id)
+                    else:
+                        duplicate_tracks.append(track)
+                if tracks['next']:
+                    tracks = session.next(tracks)
                 else:
-                    duplicate_tracks.append(track)
-            if tracks['next']:
-                tracks = session.next(tracks)
-            else:
-                tracks = None
+                    break
 
-        if duplicate_tracks:
-            typer.echo(f"Found {len(duplicate_tracks)} duplicate tracks in playlist '{playlist.get('name')}'")
+    if duplicate_tracks:
+        duplicates_count = typer.style(len(duplicate_tracks), fg=typer.colors.RED)
+    else:
+        duplicates_count = typer.style("no", fg=typer.colors.GREEN)
 
-            if verbose:
-                for i, track in enumerate(duplicate_tracks):
-                    typer.echo(f"{i + 1} {track['track']['name']}")
+    typer.echo(f"Found {duplicates_count} duplicate tracks across {len(owned_playlists)} playlists")
+
+    if verbose:
+        for track in duplicate_tracks:
+            typer.echo(f"- {track['track']['name']}")
 
 
 @app.command()
 def export(
-    playlist_name: str = typer.Argument(...),
+    playlist_id: Optional[str] = typer.Argument(None, help="Spotify playlist ID"),
     csv: bool = typer.Option(False, "--csv", help="Export playlist(s) to CSV"),
     json: bool = typer.Option(False, "--json", help="Export playlist(s) to JSON"),
     html: bool = typer.Option(False, "--html", help="Export playlist(s) to HTML"),
     path: Path = typer.Option(
-        Path().cwd(), help="Sets the output path for all file based output options"
-    )
+        Path().cwd(), help="Set the output path for all file based output options"
+    ),
 ):
-    pass
+    """
+    Export all (default) playlists or a specific playlist to the chosen output format(s)
+    """
+    export_list = []
+
+    if playlist_id:
+        try:
+            export_list.append(session.playlist(playlist_id))
+        except spotipy.exceptions.SpotifyException as e:
+            typer.secho(str(e), fg=typer.colors.RED, err=True)
+    else:
+        playlists = session.current_user_playlists()
+        while playlists:
+            for playlist in playlists['items']:
+                export_list.append(playlist)
+            if playlists['next']:
+                playlists = session.next(playlists)
+            else:
+                break
+
+    print(export_list)
