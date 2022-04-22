@@ -1,6 +1,5 @@
 # Built-in modules
 from pathlib import Path
-import unicodedata
 import re
 
 

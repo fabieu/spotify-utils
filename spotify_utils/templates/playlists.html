@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Spotify Export</title>
+  </head>
+  <body>
+    <ul id="navigation">
+      {% for item in playlists %}
+      <li><a href="{{ item.external_urls.spotify }}" target="_blank">{{ item.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
