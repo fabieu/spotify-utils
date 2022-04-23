@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spotify-utils"
-version = "0.4.0"
+version = "0.5.0"
 description = "spotify-utils is yet another spotify client, but for specific utility tasks"
 license = "MIT"
 authors = ["Fabian Eulitz <dev@sustineo.de>"]

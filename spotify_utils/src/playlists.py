@@ -2,7 +2,8 @@
 from pathlib import Path
 from typing import Optional
 import json
-from datetime import date
+from datetime import date, datetime, timedelta
+import math
 
 # PyPi modules
 import typer
@@ -138,11 +139,28 @@ def export(
     Export all playlists (default) or a specific playlist to the chosen output format(s)
     """
     def format_html(playlists: list, template_name: str):
+        def extract_artists(track):
+            """
+            Extract artists from track object to a single string
+            """
+            return ", ".join([artist['name'] for artist in track['artists']])
+
+        def duration(milliseconds: int):
+            """
+            Format seconds to HH:MM:SS string
+            """
+            seconds = math.ceil(milliseconds / 1000)
+            return str(timedelta(seconds=seconds))
+
         env = Environment(
             loader=PackageLoader("spotify_utils"),
             autoescape=select_autoescape()
         )
+        env.filters['extract_artists'] = extract_artists
+        env.filters['duration'] = duration
+
         template = env.get_template(template_name)
+        template.globals['now'] = datetime.now()
 
         return template.render(playlists=playlists)
 
@@ -165,10 +183,12 @@ def export(
                 break
 
     if json_out:
+        path.mkdir(parents=True, exist_ok=True)
         outpath = path / f"playlist_export_{date.today()}.json"
         write_file(json.dumps(export_list, indent=2), outpath)
         typer.launch(str(outpath))  # Open file in default application
     elif html_out:
+        path.mkdir(parents=True, exist_ok=True)
         outpath = path / f"playlist_export_{date.today()}.html"
         write_file(format_html(export_list, "playlists.html"), outpath)
         typer.launch(str(outpath))  # Open file in default application
