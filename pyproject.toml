@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "spotify-utils"
-version = "0.5.0"
+version = "0.5.1"
 description = "spotify-utils is yet another spotify client, but for specific utility tasks"
 license = "MIT"
 authors = ["Fabian Eulitz <dev@sustineo.de>"]
 documentation = ""
-repository = ""
-keywords = ["spotify", "utils"]
+repository = "https://github.com/fabieu/spotify-utils"
+keywords = ["spotify", "utility"]
 readme = "README.md"
 
 [tool.poetry.scripts]
@@ -23,6 +23,7 @@ Jinja2 = "^3.1.1"
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.6.0"
 python-dotenv = "^0.20.0"
+pytest = "^7.1.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

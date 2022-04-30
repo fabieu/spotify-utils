@@ -22,7 +22,6 @@ app = typer.Typer()
 
 @app.command(name="list")
 def list_playlists(
-    quiet: bool = typer.Option(False, "--quiet", "-q", help="Eliminate informational messages and comment prompts."),
     json_output: bool = typer.Option(False, "--json", help="Output the response in JSON format")
 ):
     """
@@ -44,8 +43,8 @@ def list_playlists(
             break
 
     if json_output:
-        typer.echo(playlists_list)
-    elif not quiet:
+        typer.echo(json.dumps(playlists_list))
+    else:
         typer.echo(tabulate(table, headers="keys", showindex=True, tablefmt="simple"))
 
     return playlists_list
@@ -129,6 +128,7 @@ def export(
     playlist_id: Optional[str] = typer.Argument(None, help="Spotify playlist ID"),
     json_out: bool = typer.Option(False, "--json", help="Export playlist(s) to JSON"),
     html_out: bool = typer.Option(False, "--html", help="Export playlist(s) to HTML"),
+    launch: bool = typer.Option(True, help="Open export file automatically"),
     path: Path = typer.Option(
         Path().cwd(), help="Set the output path for all file based output options"
     ),
@@ -186,12 +186,16 @@ def export(
         path.mkdir(parents=True, exist_ok=True)
         outpath = path / f"playlist_export_{date.today()}.json"
         write_file(json.dumps(export_list, indent=2), outpath)
-        typer.launch(str(outpath))  # Open file in default application
+
+        if launch:
+            typer.launch(str(outpath))  # Open file in default application
     elif html_out:
         path.mkdir(parents=True, exist_ok=True)
         outpath = path / f"playlist_export_{date.today()}.html"
         write_file(format_html(export_list, "playlists.html"), outpath)
-        typer.launch(str(outpath))  # Open file in default application
+
+        if launch:
+            typer.launch(str(outpath))  # Open file in default application
     else:
         typer.secho("Missing output parameter. Please provide one of --json or --html",
                     fg=typer.colors.RED, err=True)
