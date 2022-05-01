@@ -1,12 +1,14 @@
 # Built-in modules
-import os
 
 # PyPi modules
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from spotify_utils.config import settings
 
 # Local modules
-import spotify_utils.constants as CONSTANTS
 
-session = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ['SPOTIPY_CLIENT_ID'],
-                                                    client_secret=os.environ['SPOTIPY_CLIENT_SECRET'], redirect_uri=CONSTANTS.SPOTIPY_REDIRECT_URI, scope=CONSTANTS.SCOPES))
+AUTH_REDIRECT_URI = "http://localhost:60011"  # Redirect URL for the Spotify Authorization Code Flow
+SCOPES = ["playlist-read-private"]  # Required scopes for the Spotify API
+
+session = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=settings.CLIENT_ID,
+                                                    client_secret=settings.CLIENT_SECRET, redirect_uri=AUTH_REDIRECT_URI, scope=",".join(SCOPES)))

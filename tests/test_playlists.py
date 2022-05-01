@@ -9,12 +9,6 @@ from typer.testing import CliRunner
 # Local modules
 from spotify_utils.main import app
 
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except:
-    pass
-
 runner = CliRunner()
 
 

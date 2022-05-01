@@ -1,9 +1,3 @@
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except:
-    pass
-
 # Built-in modules
 import importlib.metadata
 
