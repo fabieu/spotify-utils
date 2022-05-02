@@ -297,10 +297,18 @@ brotli = ["brotlicffi (>=0.8.0)", "brotli (>=1.0.9)", "brotlipy (>=0.6.0)"]
 secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
+[[package]]
+name = "vermin"
+version = "1.3.3"
+description = "Concurrently detect the minimum Python versions needed to run code"
+category = "dev"
+optional = false
+python-versions = ">=2.7"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "b2c9b6c0ce2a83903e5ee9120d9e18e3dd7b9f31a9fda229546d33ee017b55b3"
+content-hash = "12be3f76d40e4c1626988266f316adeeb343247f598ed15131dd14c4f102b363"
 
 [metadata.files]
 atomicwrites = [
@@ -445,4 +453,7 @@ typer = [
 urllib3 = [
     {file = "urllib3-1.26.9-py2.py3-none-any.whl", hash = "sha256:44ece4d53fb1706f667c9bd1c648f5469a2ec925fcf3a776667042d645472c14"},
     {file = "urllib3-1.26.9.tar.gz", hash = "sha256:aabaf16477806a5e1dd19aa41f8c2b7950dd3c746362d7e3223dbe6de6ac448e"},
+]
+vermin = [
+    {file = "vermin-1.3.3-py2.py3-none-any.whl", hash = "sha256:c5bd8bf2026d87563332293a0479606954bd973d8cf72ab370e1164a019c0524"},
 ]
