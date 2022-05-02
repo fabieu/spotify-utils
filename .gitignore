@@ -131,6 +131,7 @@ dmypy.json
 # Ignore temporary files
 temp/
 tmp/
+cache.txt
 
 # Ignore dynaconf secret files
 .secrets.*

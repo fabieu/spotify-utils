@@ -1,11 +1,11 @@
 <div id="top"></div>
 <!-- PROJECT SHIELDS -->
 
-![GitHub issues](https://img.shields.io/github/issues/fabieu/spotify-utils?style=for-the-badge)
-![PyPI](https://img.shields.io/pypi/v/spotify-utils?style=for-the-badge)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spotify-utils?style=for-the-badge)
-![CircleCI](https://img.shields.io/circleci/build/github/fabieu/spotify-utils?style=for-the-badge&token=129776381708fd465360ca07ccf7fecec9346def)
-![GitHub](https://img.shields.io/github/license/fabieu/spotify-utils?style=for-the-badge)
+![GitHub issues](https://img.shields.io/github/issues/fabieu/spotify-utils?style=flat-square)
+![PyPI](https://img.shields.io/pypi/v/spotify-utils?style=flat-square)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spotify-utils?style=flat-square)
+![CircleCI](https://img.shields.io/circleci/build/github/fabieu/spotify-utils?style=flat-square&token=129776381708fd465360ca07ccf7fecec9346def)
+![GitHub](https://img.shields.io/github/license/fabieu/spotify-utils?style=flat-square)
 
 <!-- PROJECT LOGO -->
 <br />
@@ -13,8 +13,6 @@
   <a href="https://github.com/fabieu/spotify-utils">
     <img src="docs/assets/media_player.svg" alt="Logo" width="200" height="200">
   </a>
-
-  <hr>
 
   <h2 align="center">spotify-utils</h2>
 
@@ -70,10 +68,6 @@ Key features:
 
 Of course, this CLI will not serve all needs, especially during development. So I'll be adding more features in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed!
 
-### Built With
-
-- [Python](https://www.python.org/)
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
@@ -82,7 +76,7 @@ Of course, this CLI will not serve all needs, especially during development. So 
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.6 or higher
 
 ### Installation
 
@@ -152,8 +146,6 @@ Found 43 duplicate tracks across 20 playlists
 | 1 |Edge Of The Earth | Thirty Seconds To Mars| Rock, Pop|0g9IOJwdElaCZEvcqGRP4b |
 | ... |... |... |... |... |
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 ### Export playlist as beautiful HTML file
 
 ```text
@@ -161,6 +153,8 @@ spotify-utils playlists export --html
 ```
 
 ![HTML export](docs/assets/examples/html_export.png)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 
@@ -215,8 +209,8 @@ Project Link: [https://github.com/fabieu/spotify-utils](https://github.com/fabie
 - [Typer](https://github.com/tiangolo/typer)
 - [Spotipy](https://github.com/plamere/spotipy)
 - [Vermin](https://github.com/netromdk/vermin)
-- [Choose an Open Source License](https://choosealicense.com)
 - [Shields.io](https://shields.io)
+- [Choose an Open Source License](https://choosealicense.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
