@@ -1,17 +1,17 @@
 <div id="top"></div>
 <!-- PROJECT SHIELDS -->
 
-![GitHub issues](https://img.shields.io/github/issues/fabieu/spotify-utils?style=flat-square)
-![PyPI](https://img.shields.io/pypi/v/spotify-utils?style=flat-square)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spotify-utils?style=flat-square)
-![CircleCI](https://img.shields.io/circleci/build/github/fabieu/spotify-utils?style=flat-square&token=129776381708fd465360ca07ccf7fecec9346def)
-![GitHub](https://img.shields.io/github/license/fabieu/spotify-utils?style=flat-square)
+[![GitHub issues](https://img.shields.io/github/issues/fabieu/spotify-utils?style=flat-square)](https://github.com/fabieu/spotify-utils/issues)
+[![PyPI](https://img.shields.io/pypi/v/spotify-utils?style=flat-square)](https://pypi.org/project/spotify-utils/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spotify-utils?style=flat-square)](https://pypi.org/project/spotify-utils/)
+[![CircleCI](https://img.shields.io/circleci/build/github/fabieu/spotify-utils?style=flat-square&token=129776381708fd465360ca07ccf7fecec9346def)](https://github.com/fabieu/spotify-utils)
+[![GitHub](https://img.shields.io/github/license/fabieu/spotify-utils?style=flat-square)](https://github.com/fabieu/spotify-utils/blob/main/LICENSE)
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/fabieu/spotify-utils">
-    <img src="docs/assets/media_player.svg" alt="Logo" width="200" height="200">
+    <img src="https://raw.githubusercontent.com/fabieu/spotify-utils/main/docs/assets/media_player.svg" alt="Logo" width="200" height="200">
   </a>
 
   <h2 align="center">spotify-utils</h2>
@@ -76,7 +76,7 @@ Of course, this CLI will not serve all needs, especially during development. So 
 
 ### Prerequisites
 
-- Python 3.6 or higher
+- Python 3.8 or higher
 
 ### Installation
 
@@ -152,7 +152,7 @@ Found 43 duplicate tracks across 20 playlists
 spotify-utils playlists export --html
 ```
 
-![HTML export](docs/assets/examples/html_export.png)
+![HTML export](https://raw.githubusercontent.com/fabieu/spotify-utils/main/docs/assets/examples/html_export.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -188,7 +188,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the GPL-3.0 License. See [`LICENSE`](LICENSE) for more information.
+Distributed under the GPL-3.0 License. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
