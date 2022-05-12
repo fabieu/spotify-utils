@@ -98,7 +98,7 @@ def duplicates(
         if duplicate_tracks:
             duplicate_tracks_count = typer.style(len(duplicate_tracks), fg=typer.colors.RED)
         else:
-            duplicate_tracks_count = typer.style("no", fg=typer.colors.GREEN)
+            duplicate_tracks_count = typer.style("0", fg=typer.colors.GREEN)
 
         typer.echo(f"Found {duplicate_tracks_count} duplicate tracks across {len(owned_playlists)} playlists")
 
