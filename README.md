@@ -3,16 +3,16 @@
 
 ![PyPI](https://img.shields.io/pypi/v/spotify-utils?style=for-the-badge)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spotify-utils?style=for-the-badge)
-![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline-status/fabieu-ci/spotify-utils?style=for-the-badge)
-![GitLab issues](https://img.shields.io/gitlab/issues/open/fabieu-ci/spotify-utils?style=for-the-badge)
-![GitLab merge requests](https://img.shields.io/gitlab/merge-requests/open-raw/fabieu-ci/spotify-utils?style=for-the-badge)
-![GitLab](https://img.shields.io/gitlab/license/fabieu-ci/spotify-utils?style=for-the-badge)
+![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline-status/sustineo/spotify-utils?style=for-the-badge)
+![GitLab issues](https://img.shields.io/gitlab/issues/open/sustineo/spotify-utils?style=for-the-badge)
+![GitLab merge requests](https://img.shields.io/gitlab/merge-requests/open-raw/sustineo/spotify-utils?style=for-the-badge)
+![GitLab](https://img.shields.io/gitlab/license/sustineo/spotify-utils?style=for-the-badge)
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://gitlab.com/fabieu-ci/spotify-utils">
-    <img src="https://gitlab.com/fabieu-ci/spotify-utils/-/raw/main/docs/assets/media_player.svg" alt="Logo" width="200" height="200">
+  <a href="https://gitlab.com/sustineo/spotify-utils">
+    <img src="https://gitlab.com/sustineo/spotify-utils/-/raw/main/docs/assets/media_player.svg" alt="Logo" width="200" height="200">
   </a>
 
   <h2 align="center">spotify-utils</h2>
@@ -20,9 +20,9 @@
   <p align="center">
     An awesome and easy-to-use CLI for various Spotify&reg; utility tasks!
     <br />
-    <a href=https://gitlab.com/fabieu-ci/spotify-utils/-/issues">Report Bug</a>
+    <a href=https://gitlab.com/sustineo/spotify-utils/-/issues">Report Bug</a>
     ·
-    <a href="https://gitlab.com/fabieu-ci/spotify-utils/-/issues">Request Feature</a>
+    <a href="https://gitlab.com/sustineo/spotify-utils/-/issues">Request Feature</a>
   </p>
 </div>
 
@@ -153,7 +153,7 @@ Found 43 duplicate tracks across 20 playlists
 spotify-utils playlists export --html
 ```
 
-![HTML export](https://gitlab.com/fabieu-ci/spotify-utils/-/raw/main/docs/assets/examples/html_export.png)
+![HTML export](https://gitlab.com/sustineo/spotify-utils/-/raw/main/docs/assets/examples/html_export.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -164,7 +164,7 @@ spotify-utils playlists export --html
 - [ ] Improve help sections of the CLI
 - [ ] Add additional functionality
 
-See the [open issues](https://gitlab.com/fabieu-ci/spotify-utils/-/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://gitlab.com/sustineo/spotify-utils/-/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
