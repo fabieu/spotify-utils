@@ -13,9 +13,10 @@ stages:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  POETRY_VERSION: "1.5.0"
 
 default:
-  image: python:3.10.6-slim
+  image: python:3.11.3-slim
   tags:
     - gitlab-org-docker
 
@@ -23,7 +24,7 @@ prepare-environment:
   stage: prepare
   needs: []
   before_script:
-    - pip install poetry
+    - pip install poetry==$POETRY_VERSION
   script:
     - echo "Expanding version as environment variable"
     - echo "VERSION=$(poetry version -s)" > .env
@@ -39,8 +40,8 @@ test-job:
   stage: test
   needs: []
   before_script:
-    - pip install poetry
-    - poetry install
+    - pip install poetry==$POETRY_VERSION
+    - poetry install --with dev
   script:
     - echo "Running unit tests..."
     - poetry run pytest --junitxml="report.xml"
@@ -59,7 +60,7 @@ publish-job:
   stage: publish
   needs: ["test-job"]
   before_script:
-    - pip install poetry
+    - pip install poetry==$POETRY_VERSION
     - poetry install
   script:
     - echo "Publishing application..."
