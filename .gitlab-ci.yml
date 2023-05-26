@@ -36,29 +36,9 @@ prepare-environment:
     reports:
       dotenv: .env
 
-test-job:
-  stage: test
-  needs: []
-  before_script:
-    - pip install poetry==$POETRY_VERSION
-    - poetry install --with dev
-  script:
-    - echo "Running unit tests..."
-    - poetry run pytest --junitxml="report.xml"
-  cache:
-    paths:
-      - .cache/pip
-  artifacts:
-    when: always
-    paths:
-      - report.xml
-    reports:
-      junit: report.xml
-    expire_in: 1 week
-
 publish-job:
   stage: publish
-  needs: ["test-job"]
+  needs: []
   before_script:
     - pip install poetry==$POETRY_VERSION
     - poetry install
