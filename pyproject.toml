@@ -1,26 +1,25 @@
 [tool.poetry]
 name = "spotify-utils"
-version = "1.0.3"
+version = "1.0.4"
 description = "An awesome and easy-to-use CLI for various Spotify® utility tasks"
 license = "GPL-3.0-only"
 authors = ["Fabian Eulitz <dev@sustineo.de>"]
-documentation = ""
-repository = "https://github.com/fabieu/spotify-utils"
-keywords = ["spotify", "utility"]
+repository = "https://gitlab.com/sustineo/spotify-utils"
+keywords = ["spotify", "CLI", "utilities"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-spotipy = "^2.19.0"
-typer = "^0.4.1"
-tabulate = "^0.8.9"
+spotipy = "^2.23.0"
+typer = "^0.4.2"
+tabulate = "^0.8.10"
 Jinja2 = "^3.1.2"
-dynaconf = "^3.1.8"
+dynaconf = "^3.1.12"
 
-[tool.poetry.dev-dependencies]
-autopep8 = "^1.6.0"
-pytest = "^7.1.2"
-vermin = "^1.3.3"
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^1.7.0"
+pytest = "^7.3.1"
+vermin = "^1.5.1"
 
 [tool.poetry.scripts]
 spotify-utils = "spotify_utils.main:app"
