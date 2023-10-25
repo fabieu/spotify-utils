@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spotify-utils"
-version = "1.0.4"
+version = "1.0.5"
 description = "An awesome and easy-to-use CLI for various Spotify® utility tasks"
 license = "GPL-3.0-only"
 authors = ["Fabian Eulitz <dev@sustineo.de>"]
@@ -15,6 +15,7 @@ typer = "^0.4.2"
 tabulate = "^0.8.10"
 Jinja2 = "^3.1.2"
 dynaconf = "^3.1.12"
+setuptools = "^68.2.2"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "^1.7.0"

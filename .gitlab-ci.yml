@@ -13,10 +13,10 @@ stages:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  POETRY_VERSION: "1.5.0"
+  POETRY_VERSION: "1.6.1"
 
 default:
-  image: python:3.11.3-slim
+  image: python:3.12.0-slim
   tags:
     - gitlab-org-docker
 
