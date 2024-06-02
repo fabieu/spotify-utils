@@ -1,0 +1,69 @@
+name: Build and publish spotify-utils package
+on:
+  push:
+    paths:
+      - pyproject.toml
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  POETRY_VERSION: 1.6.1
+  PYPI_TOKEN: "${{ secrets.PYPI_TOKEN }}"
+  SPOTIFY_UTILS_CLIENT_ID: "${{ secrets.SPOTIFY_UTILS_CLIENT_ID }}"
+  SPOTIFY_UTILS_CLIENT_SECRET: "${{ secrets.SPOTIFY_UTILS_CLIENT_SECRET }}"
+  SPOTIFY_UTILS_REDIRECT_URI: "${{ secrets.SPOTIFY_UTILS_REDIRECT_URI }}"
+  DOCKERHUB_USER: "${{ secrets.DOCKERHUB_USER }}"
+  DOCKERHUB_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
+jobs:
+  variables:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.12-slim
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install poetry
+        run: pip install poetry==$POETRY_VERSION
+      - name: Save version to environment
+        run: echo "VERSION=$(poetry version -s)" >> "$GITHUB_ENV"
+      - name: Display version
+        run: echo "Version ${{ env.VERSION }}"
+    outputs:
+      version: ${{ env.VERSION }}
+    timeout-minutes: 15
+  publish:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs: variables
+    container:
+      image: python:3.12-slim
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install poetry
+        run: pip install poetry==$POETRY_VERSION
+      - name: Install project dependencies
+        run: poetry install
+      - name: Public package to PYPI via Poetry
+        run: poetry publish --build --no-interaction --username __token__ --password $PYPI_TOKEN
+    timeout-minutes: 60
+  create-tag:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - variables
+      - publish
+    steps:
+      - name: Create tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/v${{ needs.variables.outputs.version }}`,
+              sha: context.sha
+            })
+    timeout-minutes: 15
