@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spotify-utils"
-version = "1.0.5"
+version = "1.0.8"
 description = "An awesome and easy-to-use CLI for various Spotify® utility tasks"
 license = "GPL-3.0-only"
 authors = ["Fabian Eulitz <dev@sustineo.de>"]
