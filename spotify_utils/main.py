@@ -1,10 +1,5 @@
-# Built-in modules
 import importlib.metadata
-
-# PyPi modules
 import typer
-
-# Local modules
 from spotify_utils.src import playlists
 
 # Global variables

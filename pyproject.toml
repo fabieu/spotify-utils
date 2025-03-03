@@ -15,10 +15,8 @@ typer = "~=0.15"
 tabulate = "~=0.9"
 Jinja2 = "~=3.1"
 dynaconf = "~=3.2"
-setuptools = "~=75.8"
 
 [tool.poetry.group.dev.dependencies]
-autopep8 = "~=2.3"
 pytest = "~=8.3"
 vermin = "~=1.6"
 

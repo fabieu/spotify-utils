@@ -1,12 +1,7 @@
-# Built-in modules
-
-# PyPi modules
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-from spotipy import CacheFileHandler
-
-# Local modules
 from spotify_utils.config import settings
+from spotipy import CacheFileHandler
+from spotipy.oauth2 import SpotifyOAuth
 
 SCOPES = ["playlist-read-private"]  # Required scopes for the Spotify API
 
@@ -19,4 +14,7 @@ if settings.CACHE:
 
 cache_handler = CacheFileHandler(cache_path=cache_path)
 session = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=settings.CLIENT_ID,
-                                                    client_secret=settings.CLIENT_SECRET, redirect_uri=settings.REDIRECT_URI, scope=",".join(SCOPES), cache_handler=cache_handler))
+                                                    client_secret=settings.CLIENT_SECRET,
+                                                    redirect_uri=settings.REDIRECT_URI,
+                                                    scope=",".join(SCOPES),
+                                                    cache_handler=cache_handler))
