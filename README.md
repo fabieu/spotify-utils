@@ -3,26 +3,26 @@
 
 ![PyPI](https://img.shields.io/pypi/v/spotify-utils?style=for-the-badge)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spotify-utils?style=for-the-badge)
-![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline-status/sustineo/spotify-utils?style=for-the-badge)
-![GitLab issues](https://img.shields.io/gitlab/issues/open/sustineo/spotify-utils?style=for-the-badge)
-![GitLab merge requests](https://img.shields.io/gitlab/merge-requests/open-raw/sustineo/spotify-utils?style=for-the-badge)
-![GitLab](https://img.shields.io/gitlab/license/sustineo/spotify-utils?style=for-the-badge)
+[![GitHub pipeline status](https://img.shields.io/github/actions/workflow/status/fabieu/spotify-utils/build.yml?style=for-the-badge)](https://github.com/fabieu/spotify-utils/actions)
+[![GitHub issues](https://img.shields.io/github/issues-raw/fabieu/spotify-utils?style=for-the-badge)](https://github.com/fabieu/spotify-utils/issues)
+[![GitHub merge requests](https://img.shields.io/github/issues-pr/fabieu/spotify-utils?style=for-the-badge)](https://github.com/fabieu/spotify-utils/pulls)
+[![GitHub](https://img.shields.io/github/license/fabieu/spotify-utils?style=for-the-badge)](https://github.com/fabieu/spotify-utils/blob/main/LICENSE)
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://gitlab.com/sustineo/spotify-utils">
-    <img src="https://gitlab.com/sustineo/spotify-utils/-/raw/main/docs/assets/media_player.svg" alt="Logo" width="200" height="200">
+  <a href="https://github.com/fabieu/spotify-utils">
+    <img src="https://raw.githubusercontent.com/fabieu/spotify-utils/main/docs/logo.svg" alt="Logo" width="200" height="200">
   </a>
 
-  <h2 align="center">spotify-utils</h2>
+<h2 align="center">spotify-utils</h2>
 
   <p align="center">
     An awesome and easy-to-use CLI for various Spotify&reg; utility tasks!
     <br />
-    <a href=https://gitlab.com/sustineo/spotify-utils/-/issues">Report Bug</a>
+    <a href=https://github.com/fabieu/spotify-utils/-/issues">Report Bug</a>
     ·
-    <a href="https://gitlab.com/sustineo/spotify-utils/-/issues">Request Feature</a>
+    <a href="https://github.com/fabieu/spotify-utils/-/issues">Request Feature</a>
   </p>
 </div>
 
@@ -57,17 +57,21 @@
 
 ## About The Project
 
-There are many Spotify&reg; clients out there; however, I didn't find one that really suited my needs so I created this one. I want to create a Spotify&reg; CLI which is easy-to-use, packed with useful functionalities and with a sophisticated documentation built-in.
+There are many Spotify&reg; clients out there; however, I didn't find one that really suited my needs so I created this
+one. I want to create a Spotify&reg; CLI which is easy-to-use, packed with useful functionalities and with a
+sophisticated documentation built-in.
 
 Key features:
 
 - Playlists
-  - List information about playlists of the authenticated user in various output formats (Console, JSON)
-  - Find duplicate tracks across all playlists
-  - Export playlist information in various formats (JSON, HTML template)
+    - List information about playlists of the authenticated user in various output formats (Console, JSON)
+    - Find duplicate tracks across all playlists
+    - Export playlist information in various formats (JSON, HTML template)
 - More coming soon
 
-Of course, this CLI will not serve all needs, especially during development. So I'll be adding more features in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed!
+Of course, this CLI will not serve all needs, especially during development. So I'll be adding more features in the near
+future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all
+the people have contributed!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -77,7 +81,7 @@ Of course, this CLI will not serve all needs, especially during development. So 
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.9 or higher
 
 ### Installation
 
@@ -87,11 +91,17 @@ pip install spotify-utils
 
 ### Configuration
 
-All methods require user authorization. You will need to register your app at [My Dashboard](https://developer.spotify.com/dashboard/applications) to get the credentials necessary to make authorized calls (a client id and client secret). [Click here](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/) to go to the step-by-step guide for creating a Spotify&reg; application.
+All methods require user authorization. You will need to register your app
+at [My Dashboard](https://developer.spotify.com/dashboard/applications) to get the credentials necessary to make
+authorized calls (a client id and client
+secret). [Click here](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/) to go to
+the step-by-step guide for creating a Spotify&reg; application.
 
-The CLI uses the Authorization Code flow, which the user logs into once. It provides an access token that can be refreshed.
+The CLI uses the Authorization Code flow, which the user logs into once. It provides an access token that can be
+refreshed.
 
-Environment variables are being used for configuration. In order for the CLI to function properly you need to provide the following environment variables (use export instead of SET on Linux):
+Environment variables are being used for configuration. In order for the CLI to function properly you need to provide
+the following environment variables (use export instead of SET on Linux):
 
 ```powershell
 set SPOTIFY_UTILS_CLIENT_ID='your-spotify-client-id'
@@ -123,14 +133,14 @@ spotify-utils playlists list --json
 
 ```json
 [
-   {
-      "collaborative":false,
-      "description":"Car Music Mix 2022 \ud83d\udd25 Best Remixes of Popular Songs 2022 EDM, Bass Boosted  by Rise Music",
-      "external_urls":{
-         "spotify":"https://open.spotify.com/playlist/0fM4AkfoGygOHVXjsNB7io"
-      },
-      ... more
-   }
+  {
+    "collaborative": false,
+    "description": "Car Music Mix 2022 \ud83d\udd25 Best Remixes of Popular Songs 2022 EDM, Bass Boosted  by Rise Music",
+    "external_urls": {
+      "spotify": "https://open.spotify.com/playlist/0fM4AkfoGygOHVXjsNB7io"
+    },
+    ... more
+  }
 ]
 ```
 
@@ -141,11 +151,11 @@ spotify-utils playlists duplicates --verbose
 ```
 
 Found 43 duplicate tracks across 20 playlists
-| | name | artists | playlists | track_id |
-|---|----------------|-------------------------|------------------------|------------------------|
+| Index | Name | Artists | Playlists | Track ID |
+| --- | --- | --- | --- | --- |
 | 0 | Piercing Light | League of Legends, Mako | Rock, Sonos Mainstream | 0163ud7I4Vb0ID5K7WBkq9 |
-| 1 |Edge Of The Earth | Thirty Seconds To Mars| Rock, Pop|0g9IOJwdElaCZEvcqGRP4b |
-| ... |... |... |... |... |
+| 1 | Edge Of The Earth | Thirty Seconds To Mars | Rock, Pop | 0g9IOJwdElaCZEvcqGRP4b |
+| ... | ... | ... | ... | ... |
 
 ### Export playlist as beautiful HTML file
 
@@ -153,7 +163,7 @@ Found 43 duplicate tracks across 20 playlists
 spotify-utils playlists export --html
 ```
 
-![HTML export](https://gitlab.com/sustineo/spotify-utils/-/raw/main/docs/assets/examples/html_export.png)
+![HTML export](https://raw.githubusercontent.com/fabieu/spotify-utils/main/docs/examples/html_export.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -164,7 +174,8 @@ spotify-utils playlists export --html
 - [ ] Improve help sections of the CLI
 - [ ] Add additional functionality
 
-See the [open issues](https://gitlab.com/sustineo/spotify-utils/-/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/fabieu/spotify-utils/-/issues) for a full list of proposed features (and known
+issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -172,9 +183,11 @@ See the [open issues](https://gitlab.com/sustineo/spotify-utils/-/issues) for a 
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any
+contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also
+simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
@@ -193,14 +206,6 @@ Distributed under the GPL-3.0 License. See [LICENSE](LICENSE) for more informati
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- CONTACT -->
-
-## Contact
-
-Fabian Eulitz - [@sustineo\_](https://twitter.com/sustineo_) - dev@sustineo.de
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 <!-- ACKNOWLEDGMENTS -->
 
 ## Acknowledgments
@@ -215,6 +220,7 @@ Fabian Eulitz - [@sustineo\_](https://twitter.com/sustineo_) - dev@sustineo.de
 
 ## Disclaimer
 
-This project isn’t endorsed by Spotify AB and doesn’t reflect the views or opinions of Spotify AB or anyone officially involved in producing or managing Spotify&reg;
+This project isn’t endorsed by Spotify AB and doesn’t reflect the views or opinions of Spotify AB or anyone officially
+involved in producing or managing Spotify&reg;
 
 <p align="right">(<a href="#top">back to top</a>)</p>
