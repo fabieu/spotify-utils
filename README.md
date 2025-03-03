@@ -202,7 +202,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the GPL-3.0 License. See [LICENSE](LICENSE) for more information.
+Distributed under the Apache License 2.0. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

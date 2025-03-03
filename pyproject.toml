@@ -2,7 +2,7 @@
 name = "spotify-utils"
 version = "1.0.13"
 description = "An awesome and easy-to-use CLI for various Spotify® utility tasks"
-license = "GPL-3.0-only"
+license = "Apache-2.0"
 authors = ["Fabian Eulitz <dev@sustineo.de>"]
 repository = "https://github.com/fabieu/spotify-utils"
 keywords = ["spotify", "CLI", "utilities"]
