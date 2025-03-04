@@ -20,22 +20,18 @@
   <p align="center">
     An awesome and easy-to-use CLI for various Spotify&reg; utility tasks!
     <br />
-    <a href=https://github.com/fabieu/spotify-utils/-/issues">Report Bug</a>
+    <a href="https://github.com/fabieu/spotify-utils/issues">Report Bug</a>
     ·
-    <a href="https://github.com/fabieu/spotify-utils/-/issues">Request Feature</a>
+    <a href="https://github.com/fabieu/spotify-utils/issues">Request Feature</a>
   </p>
 </div>
 
 <!-- TABLE OF CONTENTS -->
-<details>
+
+<details open>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
+    <li><a href="#about-the-project">About The Project</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
@@ -43,11 +39,9 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#usage-and-examples">Usage and examples</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
     <li><a href="#disclaimer">Disclaimer</a></li>
   </ol>
@@ -57,7 +51,7 @@
 
 ## About The Project
 
-There are many Spotify&reg; clients out there; however, I didn't find one that really suited my needs so I created this
+There are many Spotify&reg; clients out there; however, I didn't find one that really suited my needs, so I created this
 one. I want to create a Spotify&reg; CLI which is easy-to-use, packed with useful functionalities and with a
 sophisticated documentation built-in.
 
@@ -109,7 +103,7 @@ set SPOTIFY_UTILS_CLIENT_SECRET='your-spotify-client-secret'
 set SPOTIFY_UTILS_REDIRECT_URI='your-app-redirect-url'
 ```
 
-In addition the use of an `.env` file is supported:
+In addition, the use of an `.env` file is supported:
 
 ```
 SPOTIFY_UTILS_CLIENT_ID='your-spotify-client-id'
@@ -138,8 +132,7 @@ spotify-utils playlists list --json
     "description": "Car Music Mix 2022 \ud83d\udd25 Best Remixes of Popular Songs 2022 EDM, Bass Boosted  by Rise Music",
     "external_urls": {
       "spotify": "https://open.spotify.com/playlist/0fM4AkfoGygOHVXjsNB7io"
-    },
-    ... more
+    }
   }
 ]
 ```
@@ -164,18 +157,6 @@ spotify-utils playlists export --html
 ```
 
 ![HTML export](https://raw.githubusercontent.com/fabieu/spotify-utils/main/docs/examples/html_export.png)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-<!-- ROADMAP -->
-
-## Roadmap
-
-- [ ] Improve help sections of the CLI
-- [ ] Add additional functionality
-
-See the [open issues](https://github.com/fabieu/spotify-utils/-/issues) for a full list of proposed features (and known
-issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
