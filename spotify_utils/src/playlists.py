@@ -1,20 +1,16 @@
-# Built-in modules
+import json
+import math
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Optional
-import json
-from datetime import date, datetime, timedelta
-import math
 
-# PyPi modules
-import typer
-from tabulate import tabulate
 import spotipy.exceptions
+import typer
 from jinja2 import Environment, PackageLoader, select_autoescape
-
-# Local modules
-from spotify_utils.src.auth import session
 from spotify_utils.src import user
+from spotify_utils.src.auth import session
 from spotify_utils.src.file_operations import write_file
+from tabulate import tabulate
 
 # Initialize Typer
 app = typer.Typer()
@@ -22,7 +18,7 @@ app = typer.Typer()
 
 @app.command(name="list")
 def list_playlists(
-    json_output: bool = typer.Option(False, "--json", help="Output the response in JSON format")
+        json_output: bool = typer.Option(False, "--json", help="Output the response in JSON format")
 ):
     """
     List all playlists of the current user
@@ -52,8 +48,8 @@ def list_playlists(
 
 @app.command()
 def duplicates(
-    verbose: bool = typer.Option(False, "--verbose", "-v"),
-    quiet: bool = typer.Option(False, "--quiet", "-q")
+        verbose: bool = typer.Option(False, "--verbose", "-v"),
+        quiet: bool = typer.Option(False, "--quiet", "-q")
 ):
     """
     Find duplicates in playlists which are owned by the current user
@@ -123,21 +119,21 @@ def duplicates(
         typer.echo(tabulate(table, headers="keys", showindex=True, tablefmt="simple"))
 
 
-@ app.command()
+@app.command()
 def export(
-    playlist_id: Optional[str] = typer.Argument(None, help="Spotify playlist ID"),
-    json_out: bool = typer.Option(False, "--json", help="Export playlist(s) to JSON"),
-    html_out: bool = typer.Option(False, "--html", help="Export playlist(s) to HTML"),
-    launch: bool = typer.Option(True, help="Open export file automatically"),
-    path: Path = typer.Option(
-        Path().cwd(), help="Set the output path for all file based output options"
-    ),
-
+        playlist_id: Optional[str] = typer.Argument(None, help="Spotify playlist ID"),
+        json_out: bool = typer.Option(False, "--json", help="Export playlist(s) to JSON"),
+        html_out: bool = typer.Option(False, "--html", help="Export playlist(s) to HTML"),
+        launch: bool = typer.Option(True, help="Open export file automatically"),
+        path: Path = typer.Option(
+            Path().cwd(), help="Set the output path for all file based output options"
+        ),
 
 ):
     """
     Export all playlists (default) or a specific playlist to the chosen output format(s)
     """
+
     def format_html(playlists: list, template_name: str):
         def extract_artists(track):
             """

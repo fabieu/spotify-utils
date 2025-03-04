@@ -1,4 +1,3 @@
-# Local modules
 from spotify_utils.src.auth import session
 
 

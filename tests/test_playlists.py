@@ -1,13 +1,9 @@
-# Build-in modules
 import json
-from pathlib import Path
 from datetime import date
+from pathlib import Path
 
-# PyPi modules
-from typer.testing import CliRunner
-
-# Local modules
 from spotify_utils.main import app
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
