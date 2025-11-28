@@ -7,10 +7,11 @@ from typing import Optional
 import spotipy.exceptions
 import typer
 from jinja2 import Environment, PackageLoader, select_autoescape
+from tabulate import tabulate
+
 from spotify_utils.src import user
 from spotify_utils.src.auth import session
 from spotify_utils.src.file_operations import write_file
-from tabulate import tabulate
 
 # Initialize Typer
 app = typer.Typer()
@@ -133,65 +134,103 @@ def export(
     """
     Export all playlists (default) or a specific playlist to the chosen output format(s)
     """
-
-    def format_html(playlists: list, template_name: str):
-        def extract_artists(track):
-            """
-            Extract artists from track object to a single string
-            """
-            return ", ".join([artist['name'] for artist in track['artists']])
-
-        def duration(milliseconds: int):
-            """
-            Format seconds to HH:MM:SS string
-            """
-            seconds = math.ceil(milliseconds / 1000)
-            return str(timedelta(seconds=seconds))
-
-        env = Environment(
-            loader=PackageLoader("spotify_utils"),
-            autoescape=select_autoescape()
-        )
-        env.filters['extract_artists'] = extract_artists
-        env.filters['duration'] = duration
-
-        template = env.get_template(template_name)
-        template.globals['now'] = datetime.now()
-
-        return template.render(playlists=playlists)
-
-    # Add playlists to export_list based on playlist_id or all playlists of the current user
-    export_list = []
-
-    if playlist_id:
-        try:
-            export_list.append(session.playlist(playlist_id))
-        except spotipy.exceptions.SpotifyException as e:
-            typer.secho(str(e), fg=typer.colors.RED, err=True)
-    else:
-        playlists = session.current_user_playlists()
-        while playlists:
-            for playlist in playlists['items']:
-                export_list.append(session.playlist(playlist['id']))
-            if playlists['next']:
-                playlists = session.next(playlists)
-            else:
-                break
+    playlists_with_tracks = collect_playlists(session, playlist_id)
 
     if json_out:
         path.mkdir(parents=True, exist_ok=True)
         outpath = path / f"playlist_export_{date.today()}.json"
-        write_file(json.dumps(export_list, indent=2), outpath)
+        write_file(json.dumps(playlists_with_tracks, indent=2), outpath)
 
         if launch:
             typer.launch(str(outpath))  # Open file in default application
     elif html_out:
         path.mkdir(parents=True, exist_ok=True)
         outpath = path / f"playlist_export_{date.today()}.html"
-        write_file(format_html(export_list, "playlists.html"), outpath)
+        write_file(format_html(playlists_with_tracks, "playlists.html"), outpath)
 
         if launch:
             typer.launch(str(outpath))  # Open file in default application
     else:
         typer.secho("Missing output parameter. Please provide one of --json or --html",
                     fg=typer.colors.RED, err=True)
+
+
+def collect_playlists(session: spotipy.Spotify, playlist_id: str | None = None):
+    """
+    Return a list of full playlist objects.
+
+    - If playlist_id is provided: return just that playlist.
+    - Otherwise: return all of the current user's playlists.
+    """
+    playlist_objects: list[dict] = []
+
+    try:
+        # Single playlist by id
+        if playlist_id:
+            playlist_objects.append(fetch_full_playlist(playlist_id))
+            return playlist_objects
+
+        # All playlists of current user
+        playlists = session.current_user_playlists()
+        while playlists:
+            for playlist in playlists.get('items', []):
+                playlist_objects.append(fetch_full_playlist(playlist['id']))
+
+            if playlists.get('next'):
+                playlists = session.next(playlists)
+            else:
+                break
+
+    except spotipy.exceptions.SpotifyException as e:
+        typer.secho(str(e), fg=typer.colors.RED, err=True)
+
+    return playlist_objects
+
+
+def fetch_full_playlist(playlist_id: str):
+    """
+    Return playlist object with all tracks loaded (paginated).
+    """
+    playlist = session.playlist(playlist_id)
+    all_items = []
+
+    tracks = session.playlist_tracks(playlist_id)
+    while tracks:
+        for item in tracks.get('items', []):
+            all_items.append(item)
+
+        if tracks.get('next'):
+            tracks = session.next(tracks)
+        else:
+            break
+
+    # normalize playlist['tracks'] to include the full items and total count
+    playlist['tracks'] = {'items': all_items, 'total': len(all_items)}
+    return playlist
+
+
+def format_html(playlists: list, template_name: str):
+    def extract_artists(track):
+        """
+        Extract artists from track object to a single string
+        """
+        return ", ".join([artist['name'] for artist in track['artists']])
+
+    def duration(milliseconds: int):
+        """
+        Format seconds to HH:MM:SS string
+        """
+        seconds = math.ceil(milliseconds / 1000)
+        return str(timedelta(seconds=seconds))
+
+    env = Environment(
+        loader=PackageLoader("spotify_utils"),
+        autoescape=select_autoescape()
+    )
+    env.filters['extract_artists'] = extract_artists
+    env.filters['duration'] = duration
+
+    template = env.get_template(template_name)
+    template.globals['now'] = datetime.now()
+
+    return template.render(playlists=playlists)
