@@ -57,15 +57,14 @@ sophisticated documentation built-in.
 
 Key features:
 
-- Playlists
+- **Playlists**
     - List information about playlists of the authenticated user in various output formats (Console, JSON)
+    - Export playlist information in various formats (JSON, HTML)
     - Find duplicate tracks across all playlists
-    - Export playlist information in various formats (JSON, HTML template)
-- More coming soon
 
-Of course, this CLI will not serve all needs, especially during development. So I'll be adding more features in the near
-future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all
-the people have contributed!
+**More features coming soon**  
+Of course, this CLI will not serve all needs, especially during development. I'll be adding more features in the near
+future. You may also suggest changes by forking this repo and creating a pull request or opening an issue.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -86,12 +85,11 @@ pip install spotify-utils
 ### Configuration
 
 All methods require user authorization. You will need to register your app
-at [My Dashboard](https://developer.spotify.com/dashboard/applications) to get the credentials necessary to make
-authorized calls (a client id and client
-secret). [Click here](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/) to go to
+at [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) to get the credentials necessary to make
+authorized calls. [Click here](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/) to go to
 the step-by-step guide for creating a Spotify&reg; application.
 
-The CLI uses the Authorization Code flow, which the user logs into once. It provides an access token that can be
+The CLI uses the Authorization Code Flow, which the user logs into once. It provides an access token that can be
 refreshed.
 
 Environment variables are being used for configuration. In order for the CLI to function properly you need to provide
@@ -119,10 +117,10 @@ SPOTIFY_UTILS_REDIRECT_URI='your-app-redirect-url'
 
 In this section you can find usage examples of the CLI
 
-### List all playlists of the current authenticated user in JSON format
+### List all playlists of the current user in JSON format
 
 ```text
-spotify-utils playlists list --json
+spotify-utils playlists list --format json
 ```
 
 ```json
@@ -150,13 +148,19 @@ Found 43 duplicate tracks across 20 playlists
 | 1 | Edge Of The Earth | Thirty Seconds To Mars | Rock, Pop | 0g9IOJwdElaCZEvcqGRP4b |
 | ... | ... | ... | ... | ... |
 
-### Export playlist as beautiful HTML file
+### Export playlists as HTML
 
 ```text
-spotify-utils playlists export --html
+spotify-utils playlists export --format html
 ```
 
 ![HTML export](https://raw.githubusercontent.com/fabieu/spotify-utils/main/docs/examples/html_export.png)
+
+### Export specific playlist as JSON
+
+```text
+spotify-utils playlists export --format json --id {PLAYLIST_ID}
+```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -193,7 +197,6 @@ Distributed under the Apache License 2.0. See [LICENSE](LICENSE) for more inform
 
 - [Typer](https://github.com/tiangolo/typer)
 - [Spotipy](https://github.com/plamere/spotipy)
-- [Vermin](https://github.com/netromdk/vermin)
 - [Shields.io](https://shields.io)
 - [Choose an Open Source License](https://choosealicense.com)
 
