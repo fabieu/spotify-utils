@@ -11,22 +11,23 @@
 
     <style>
         a {
-            color: green;
+            color: #1ed760;
         }
 
         a[href] {
             text-decoration: none;
         }
+
+        .navbar {
+            background-color: #1ed760;
+        }
     </style>
 </head>
 <body>
 <!-- Responsive navbar-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="#"
-        >Spotify Playlist Export ({{ now.strftime('%Y-%m-%d') }})
-        </a
-        >
+        <a class="navbar-brand" href="#">Spotify Playlist Export</a>
         <button
                 class="navbar-toggler"
                 type="button"
@@ -62,10 +63,11 @@
         <div class="m-5">
             <div>
                 <h3>{{ playlist.name }}</h3>
-                <a href="{{ playlist.external_urls.spotify }}" target="_blank"
-                >Open playlist in Spotify
-                </a
-                >
+                <p>{{ playlist.description }}</p>
+                <span>
+                    <a href="{{ playlist.external_urls.spotify }}" target="_blank">Show playlist in Spotify</a>
+                    - {{ playlist.tracks.get('total', 0) if playlist and playlist.tracks else 0 }} tracks
+                </span>
             </div>
             <table class="table">
                 <thead class="thead-dark">
@@ -91,9 +93,7 @@
                     <th scope="col">Song</th>
                     <th scope="col">Artists</th>
                     <th scope="col">Duration</th>
-                    <th scope="col">Popularity</th>
-                    <th scope="col">Preview</th>
-                    <th scope="col">Link</th>
+                    <th scope="col">Reference</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -122,22 +122,8 @@
                         <td>{{ item.track.name }}</td>
                         <td>{{ item.track | extract_artists }}</td>
                         <td>{{ item.track.duration_ms | duration }}</td>
-                        <td>{{ item.track.popularity }}</td>
                         <td>
-                            {% if item.track.preview_url %}
-                                <audio
-                                        controls
-                                        anonymous
-                                        preload="none"
-                                        src="{{ item.track.preview_url }}"
-                                        style="height: 30px"
-                                >
-                                    Your browser does not support the <code>audio</code> element.
-                                </audio>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ item.track.external_urls.spotify }}" target="_blank">Open</a>
+                            <a href="{{ item.track.external_urls.spotify }}" target="_blank">Show in Spotify</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -149,14 +135,5 @@
 
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.min.js"></script>
-
-<!-- Custom JS -->
-<script>
-    // Change default volume of audio tags to 0.25
-    var audioControls = document.getElementsByTagName("audio");
-    for (let audioControl of audioControls) {
-        audioControl.volume = 0.25;
-    }
-</script>
 </body>
 </html>
