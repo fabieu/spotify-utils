@@ -18,7 +18,6 @@ dynaconf = "~=3.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "~=8.3"
-vermin = "~=1.6"
 
 [tool.poetry.scripts]
 spotify-utils = "spotify_utils.main:app"
