@@ -7,7 +7,6 @@ settings = Dynaconf(
     validators=[
         # Ensure some parameters exists (are required)
         Validator('CLIENT_ID', 'CLIENT_SECRET', 'REDIRECT_URI', must_exist=True),
-        Validator('CACHE', default=None),
     ],
 )
 
