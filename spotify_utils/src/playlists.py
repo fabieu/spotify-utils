@@ -154,8 +154,9 @@ def duplicates(
 
         while tracks:
             for track in tracks['items']:
-                track_id = track['track']['id']
-                tracks_map.setdefault(track_id, []).append(playlist['id']),
+                if track['track']:
+                    track_id = track['track']['id']
+                    tracks_map.setdefault(track_id, []).append(playlist['id'])
             if tracks['next']:
                 tracks = session.next(tracks)
             else:

@@ -438,7 +438,9 @@ class SpotifyUtilsApp(App[None]):
         Binding("ctrl+d", "switch_tab('tab-duplicates')", "Duplicates", priority=True),
     ]
 
-    _playlists_cache: list[dict] | None = None
+    def __init__(self) -> None:
+        super().__init__()
+        self._playlists_cache: list[dict] | None = None
 
     def get_playlists(self, force_refresh: bool = False) -> list[dict]:
         """Return cached playlist list, fetching from the API when necessary."""
