@@ -1,5 +1,7 @@
 import importlib.metadata
+
 import typer
+
 from spotify_utils.src import playlists
 
 # Global variables
@@ -13,6 +15,13 @@ app.add_typer(playlists.app, name="playlists")
 @app.command()
 def version():
     typer.echo(f"spotify-utils v{__version__}")
+
+
+@app.command()
+def tui():
+    """Launch the interactive TUI."""
+    from spotify_utils.src.tui.app import SpotifyUtilsApp
+    SpotifyUtilsApp().run()
 
 
 if __name__ == "__main__":

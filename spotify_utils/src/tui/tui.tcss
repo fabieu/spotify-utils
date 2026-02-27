@@ -1,0 +1,102 @@
+/* ── Global ─────────────────────────────────────────────────────────────── */
+
+Input,
+Select {
+    border: none;
+}
+
+SelectCurrent,
+SelectOverlay {
+    border: blank;
+}
+
+/* ── Tracks screen ──────────────────────────────────────────────────────── */
+
+PlaylistTracksScreen {
+    height: 1fr;
+}
+
+PlaylistTracksScreen #tracks-title {
+    height: auto;
+    padding: 0 2;
+    background: $panel;
+    color: $text;
+    text-style: bold;
+}
+
+PlaylistTracksScreen DataTable {
+    height: 1fr;
+}
+
+/* ── Playlists tab ─────────────────────────────────────────────────────── */
+
+PlaylistsTab {
+    height: 1fr;
+    padding: 1 2;
+}
+
+PlaylistsTab DataTable {
+    height: 1fr;
+}
+
+PlaylistsTab #playlists-actions {
+    height: auto;
+    margin-top: 1;
+    align-horizontal: right;
+}
+
+PlaylistsTab #playlists-refresh {
+    width: auto;
+}
+
+/* ── Export tab ────────────────────────────────────────────────────────── */
+
+ExportTab {
+    height: 1fr;
+    padding: 1 2;
+}
+
+ExportTab Label {
+    margin-top: 1;
+    color: $text-muted;
+}
+
+ExportTab Input,
+ExportTab Select {
+    margin-bottom: 1;
+}
+
+ExportTab #export-actions {
+    height: auto;
+    margin-top: 1;
+}
+
+ExportTab #export-loading {
+    height: 3;
+}
+
+ExportTab #export-status {
+    height: auto;
+    margin-top: 1;
+}
+
+/* ── Duplicates tab ────────────────────────────────────────────────────── */
+
+DuplicatesTab {
+    height: 1fr;
+    padding: 1 2;
+}
+
+DuplicatesTab #dup-stats {
+    height: auto;
+    margin-bottom: 1;
+}
+
+DuplicatesTab #dup-actions {
+    height: auto;
+    margin-bottom: 1;
+}
+
+DuplicatesTab DataTable {
+    height: 1fr;
+}
