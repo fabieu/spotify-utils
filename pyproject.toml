@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spotify-utils"
-version = "2.0.0"
+version = "2.0.1"
 description = "An awesome and easy-to-use CLI for various Spotify® utility tasks"
 license = "Apache-2.0"
 authors = ["Fabian Eulitz <dev@sustineo.de>"]
