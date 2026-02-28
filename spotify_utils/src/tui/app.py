@@ -8,6 +8,7 @@ from __future__ import annotations
 import importlib.metadata
 import json
 import uuid
+import webbrowser
 from pathlib import Path
 
 from textual import work
@@ -58,16 +59,25 @@ class PlaylistTracksScreen(Screen[None]):
 
     BINDINGS = [Binding("escape", "app.pop_screen", "Back")]
 
-    def __init__(self, playlist_id: str, playlist_name: str) -> None:
+    def __init__(self, playlist_id: str, playlist_name: str, playlist_url: str) -> None:
         super().__init__()
         self._playlist_id = playlist_id
         self._playlist_name = playlist_name
+        self._playlist_url = playlist_url
 
     def compose(self) -> ComposeResult:
-        yield Static(self._playlist_name, id="tracks-title")
+        yield Horizontal(
+            Static(self._playlist_name, id="tracks-title"),
+            Button("Open in Browser", id="tracks-open-url", variant="default"),
+            id="tracks-header",
+        )
         yield LoadingIndicator(id="tracks-loading")
         yield DataTable(id="tracks-table", cursor_type="row")
         yield Footer()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "tracks-open-url":
+            webbrowser.open(self._playlist_url)
 
     def on_mount(self) -> None:
         self.query_one("#tracks-loading", LoadingIndicator).display = False
@@ -98,9 +108,9 @@ class PlaylistTracksScreen(Screen[None]):
                 else:
                     break
 
-            title_w  = max((len(r[1]) for r in rows), default=5)
+            title_w = max((len(r[1]) for r in rows), default=5)
             artist_w = max((len(r[2]) for r in rows), default=9)
-            album_w  = max((len(r[3]) for r in rows), default=5)
+            album_w = max((len(r[3]) for r in rows), default=5)
 
             def populate() -> None:
                 table = self.query_one(DataTable)
@@ -145,6 +155,7 @@ class PlaylistsTab(Container):
 
     def on_mount(self) -> None:
         self._playlist_data: dict[str, str] = {}  # id -> name
+        self._playlist_urls: dict[str, str] = {}  # id -> url
         self._fetch()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
@@ -154,28 +165,31 @@ class PlaylistsTab(Container):
     def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
         playlist_id = str(event.row_key.value)
         playlist_name = self._playlist_data.get(playlist_id, playlist_id)
-        self.app.push_screen(PlaylistTracksScreen(playlist_id, playlist_name))
+        playlist_url = self._playlist_urls.get(playlist_id, "")
+        self.app.push_screen(PlaylistTracksScreen(playlist_id, playlist_name, playlist_url))
 
     @work(thread=True)
     def _fetch(self, force_refresh: bool = False) -> None:
         self.app.call_from_thread(self._set_loading, True)
         try:
             playlists = self.app.get_playlists(force_refresh=force_refresh)
-            rows: list[tuple[str, str, str, str]] = []
+            rows: list[tuple[str, str, str]] = []
             playlist_data: dict[str, str] = {}
+            playlist_urls: dict[str, str] = {}
             for p in playlists:
                 playlist_data[p["id"]] = p["name"]
+                playlist_urls[p["id"]] = p["external_urls"]["spotify"]
                 rows.append((
                     p["name"],
                     p["owner"]["display_name"],
                     p["id"],
-                    p["external_urls"]["spotify"],
                 ))
 
-            name_w  = max((len(r[0]) for r in rows), default=4)
+            name_w = max((len(r[0]) for r in rows), default=4)
             owner_w = max((len(r[1]) for r in rows), default=5)
 
             self._playlist_data = playlist_data
+            self._playlist_urls = playlist_urls
 
             def populate() -> None:
                 table = self.query_one(DataTable)
@@ -183,13 +197,11 @@ class PlaylistsTab(Container):
                 table.add_column("Name")
                 table.add_column("Owner")
                 table.add_column("ID")
-                table.add_column("URL")
                 for row in rows:
                     table.add_row(
                         _pad(row[0], name_w),
                         _pad(row[1], owner_w),
                         row[2],
-                        row[3],
                         key=row[2],
                     )
 
@@ -425,15 +437,12 @@ class DuplicatesTab(Container):
 # ---------------------------------------------------------------------------
 
 class SpotifyUtilsApp(App[None]):
-    """spotify-utils TUI — interactive Spotify utilities."""
-
     TITLE = f"spotify-utils v{__version__}"
-    SUB_TITLE = "Interactive Spotify Utilities"
     CSS_PATH = "tui.tcss"
 
     BINDINGS = [
         Binding("ctrl+q", "quit", "Quit"),
-        Binding("ctrl+p", "switch_tab('tab-playlists')", "Playlists", priority=True),
+        Binding("ctrl+l", "switch_tab('tab-playlists')", "Playlists", priority=True),
         Binding("ctrl+e", "switch_tab('tab-export')", "Export", priority=True),
         Binding("ctrl+d", "switch_tab('tab-duplicates')", "Duplicates", priority=True),
     ]

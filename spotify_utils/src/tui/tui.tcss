@@ -1,5 +1,10 @@
 /* ── Global ─────────────────────────────────────────────────────────────── */
 
+Button {
+    border: none;
+    padding: 1 2;
+}
+
 Input,
 Select {
     border: none;
@@ -16,12 +21,25 @@ PlaylistTracksScreen {
     height: 1fr;
 }
 
-PlaylistTracksScreen #tracks-title {
-    height: auto;
+PlaylistTracksScreen #tracks-header {
+    height: 3;
     padding: 0 2;
     background: $panel;
+    align: left middle;
+}
+
+PlaylistTracksScreen #tracks-title {
+    height: 3;
     color: $text;
     text-style: bold;
+    width: 1fr;
+    content-align: left middle;
+}
+
+PlaylistTracksScreen #tracks-open-url {
+    width: auto;
+    min-width: 0;
+    padding: 1 2;
 }
 
 PlaylistTracksScreen DataTable {
