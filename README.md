@@ -57,12 +57,12 @@ sophisticated documentation built-in.
 
 Key features:
 
+- **Interactive TUI** — a terminal user interface with tabs for browsing, exporting, and scanning duplicates
 - **Playlists**
     - List information about playlists of the authenticated user in various output formats (Console, JSON)
     - Export playlist information in various formats (JSON, HTML)
     - Find duplicate tracks across all playlists
 
-**More features coming soon**  
 Of course, this CLI will not serve all needs, especially during development. I'll be adding more features in the near
 future. You may also suggest changes by forking this repo and creating a pull request or opening an issue.
 
@@ -74,7 +74,7 @@ future. You may also suggest changes by forking this repo and creating a pull re
 
 ### Prerequisites
 
-- Python 3.9 or higher
+- Python 3.10+
 
 ### Installation
 
@@ -116,6 +116,20 @@ SPOTIFY_UTILS_REDIRECT_URI='your-app-redirect-url'
 ## Usage and examples
 
 In this section you can find usage examples of the CLI
+
+### Launch the interactive TUI
+
+```text
+spotify-utils tui
+```
+
+The TUI provides three tabs:
+
+- **Playlists** — browse all your playlists in a table; click a row to view its tracks
+- **Duplicates** — scan your owned playlists and list any duplicate tracks
+- **Export** — select a playlist (or all), choose JSON or HTML, and pick an output directory
+
+Key bindings: `Ctrl+L` Playlists · `Ctrl+D` Duplicates · `Ctrl+E` Export · `Ctrl+Q` Quit
 
 ### List all playlists of the current user in JSON format
 
@@ -196,6 +210,7 @@ Distributed under the Apache License 2.0. See [LICENSE](LICENSE) for more inform
 ## Acknowledgments
 
 - [Typer](https://github.com/tiangolo/typer)
+- [Textual](https://github.com/Textualize/textual)
 - [Spotipy](https://github.com/plamere/spotipy)
 - [Shields.io](https://shields.io)
 - [Choose an Open Source License](https://choosealicense.com)
