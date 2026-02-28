@@ -12,7 +12,7 @@ Select {
 
 SelectCurrent,
 SelectOverlay {
-    border: blank;
+    border: none;
 }
 
 /* ── Tracks screen ──────────────────────────────────────────────────────── */
@@ -39,7 +39,6 @@ PlaylistTracksScreen #tracks-title {
 PlaylistTracksScreen #tracks-open-url {
     width: auto;
     min-width: 0;
-    padding: 1 2;
 }
 
 PlaylistTracksScreen DataTable {

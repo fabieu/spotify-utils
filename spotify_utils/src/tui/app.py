@@ -77,7 +77,10 @@ class PlaylistTracksScreen(Screen[None]):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "tracks-open-url":
-            webbrowser.open(self._playlist_url)
+            try:
+                webbrowser.open(self._playlist_url)
+            except Exception as exc:
+                self.app.notify(str(exc), severity="error")
 
     def on_mount(self) -> None:
         self.query_one("#tracks-loading", LoadingIndicator).display = False
@@ -99,7 +102,7 @@ class PlaylistTracksScreen(Screen[None]):
                     artists = ", ".join(
                         a["name"] for a in track.get("artists", [])
                     )
-                    album = track.get("album", {}).get("name", "")
+                    album = (track.get("album") or {}).get("name", "")
                     duration = _fmt_duration(track.get("duration_ms", 0))
                     rows.append((str(i), name, artists, album, duration))
                     i += 1
@@ -177,11 +180,14 @@ class PlaylistsTab(Container):
             playlist_data: dict[str, str] = {}
             playlist_urls: dict[str, str] = {}
             for p in playlists:
+                owner = p.get("owner") or {}
+                display_name = owner.get("display_name") or owner.get("id", "")
+                url = (p.get("external_urls") or {}).get("spotify", "")
                 playlist_data[p["id"]] = p["name"]
-                playlist_urls[p["id"]] = p["external_urls"]["spotify"]
+                playlist_urls[p["id"]] = url
                 rows.append((
                     p["name"],
-                    p["owner"]["display_name"],
+                    display_name,
                     p["id"],
                 ))
 
@@ -295,6 +301,7 @@ class ExportTab(Container):
 
         self.app.call_from_thread(self._set_loading, True, "Collecting playlists…")
         try:
+            out_dir.mkdir(parents=True, exist_ok=True)
             playlists_data = collect_playlists(session, playlist_id)
             self.app.call_from_thread(self._set_status, "Writing file…")
 
