@@ -338,6 +338,43 @@ class ExportTab(Container):
 
 
 # ---------------------------------------------------------------------------
+# Duplicates tab helpers
+# ---------------------------------------------------------------------------
+
+def _build_tracks_map(owned: list[dict]) -> dict[str, list[str]]:
+    """Build a map of track_id → [playlist_id, ...] across all given playlists."""
+    tracks_map: dict[str, list[str]] = {}
+    for playlist in owned:
+        tracks_page = session.playlist_items(playlist["id"])
+        while tracks_page:
+            for item in tracks_page["items"]:
+                if item["track"] and item["track"].get("id"):
+                    tid = item["track"]["id"]
+                    tracks_map.setdefault(tid, []).append(playlist["id"])
+            if tracks_page["next"]:
+                tracks_page = session.next(tracks_page)
+            else:
+                break
+    return tracks_map
+
+
+def _build_duplicate_rows(duplicates: dict[str, list[str]]) -> list[tuple[str, str, str]]:
+    """Resolve duplicate track/playlist names and return table rows."""
+    rows: list[tuple[str, str, str]] = []
+    playlist_cache: dict[str, str] = {}
+    for tid, pids in duplicates.items():
+        track = session.track(tid)
+        artists = ", ".join(a["name"] for a in track["artists"])
+        p_names: list[str] = []
+        for pid in pids:
+            if pid not in playlist_cache:
+                playlist_cache[pid] = session.playlist(pid, fields="name")["name"]
+            p_names.append(playlist_cache[pid])
+        rows.append((track["name"], artists, ", ".join(p_names)))
+    return rows
+
+
+# ---------------------------------------------------------------------------
 # Duplicates tab
 # ---------------------------------------------------------------------------
 
@@ -379,35 +416,9 @@ class DuplicatesTab(Container):
                 if p["owner"]["id"] == current_user["id"]
             ]
 
-            tracks_map: dict[str, list[str]] = {}
-            for playlist in owned:
-                tracks_page = session.playlist_items(playlist["id"])
-                while tracks_page:
-                    for item in tracks_page["items"]:
-                        if item["track"] and item["track"].get("id"):
-                            tid = item["track"]["id"]
-                            tracks_map.setdefault(tid, []).append(playlist["id"])
-                    if tracks_page["next"]:
-                        tracks_page = session.next(tracks_page)
-                    else:
-                        break
-
-            duplicates = {
-                tid: pids for tid, pids in tracks_map.items() if len(pids) > 1
-            }
-
-            rows: list[tuple[str, str, str]] = []
-            playlist_cache: dict[str, str] = {}
-            for tid, pids in duplicates.items():
-                track = session.track(tid)
-                track_name = track["name"]
-                artists = ", ".join(a["name"] for a in track["artists"])
-                p_names: list[str] = []
-                for pid in pids:
-                    if pid not in playlist_cache:
-                        playlist_cache[pid] = session.playlist(pid, fields="name")["name"]
-                    p_names.append(playlist_cache[pid])
-                rows.append((track_name, artists, ", ".join(p_names)))
+            tracks_map = _build_tracks_map(owned)
+            duplicates = {tid: pids for tid, pids in tracks_map.items() if len(pids) > 1}
+            rows = _build_duplicate_rows(duplicates)
 
             count = len(duplicates)
             if count > 0:

@@ -24,7 +24,7 @@ def list_playlists(
     """
     playlists = session.current_user_playlists()
     playlists_list = []
-    table = dict()
+    table = {}
     while playlists:
         for playlist in playlists['items']:
             table.setdefault("name", []).append(playlist['name'])
@@ -124,6 +124,36 @@ def fetch_full_playlist(playlist_id: str):
     return playlist
 
 
+def _get_owned_playlists(current_user: dict) -> list:
+    """Return all playlists owned by current_user."""
+    owned = []
+    playlists = session.current_user_playlists()
+    while playlists:
+        for playlist in playlists['items']:
+            if current_user['id'] == playlist['owner']['id']:
+                owned.append(playlist)
+        if playlists['next']:
+            playlists = session.next(playlists)
+        else:
+            break
+    return owned
+
+
+def _build_tracks_map(owned_playlists: list) -> dict:
+    """Return a map of track_id → [playlist_id, ...] across all owned playlists."""
+    tracks_map = {}
+    for playlist in owned_playlists:
+        tracks = session.playlist_items(playlist['id'])
+        while tracks:
+            for track in tracks['items']:
+                tracks_map.setdefault(track['track']['id'], []).append(playlist['id'])
+            if tracks['next']:
+                tracks = session.next(tracks)
+            else:
+                break
+    return tracks_map
+
+
 @app.command()
 def duplicates(
         verbose: bool = typer.Option(False, "--verbose", "-v"),
@@ -133,39 +163,10 @@ def duplicates(
     Find duplicates in playlists which are owned by the current user
     """
     current_user = user.get_details()
-    playlists = session.current_user_playlists()
+    owned_playlists = _get_owned_playlists(current_user)
+    tracks_map = _build_tracks_map(owned_playlists)
 
-    # Discover all playlists owned by the current user by comparing the "id" of the current user with the "id" of the playlist owner
-    owned_playlists = []
-    while playlists:
-        for playlist in playlists['items']:
-            if current_user['id'] == playlist['owner']['id']:
-                owned_playlists.append(playlist)
-        if playlists['next']:
-            playlists = session.next(playlists)
-        else:
-            break
-
-    # Iterate over all tracks from every playlists and create a HashMap with key = track id and value = all playlist ids where the track has been found
-    tracks_map = dict()
-
-    for playlist in owned_playlists:
-        tracks = session.playlist_items(playlist['id'])
-
-        while tracks:
-            for track in tracks['items']:
-                track_id = track['track']['id']
-                tracks_map.setdefault(track_id, []).append(playlist['id']),
-            if tracks['next']:
-                tracks = session.next(tracks)
-            else:
-                break
-
-    # Filter tracks_map for tracks with more than one playlist_id (duplicates)
-    duplicate_tracks = dict()
-    for track_id, playlist_ids in tracks_map.items():
-        if len(playlist_ids) > 1:
-            duplicate_tracks[track_id] = playlist_ids
+    duplicate_tracks = {tid: pids for tid, pids in tracks_map.items() if len(pids) > 1}
 
     # Print basic stats, like number of duplicates and searched playlists to console
     if not quiet:
@@ -178,7 +179,7 @@ def duplicates(
 
     # Print additional information about the duplicate tracks and the playlists
     if verbose and not quiet:
-        table = dict()
+        table = {}
 
         for track_id, playlist_ids in duplicate_tracks.items():
             track_details = session.track(track_id)
