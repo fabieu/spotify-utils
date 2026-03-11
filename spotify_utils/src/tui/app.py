@@ -15,7 +15,7 @@ from textual import work
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Container, Horizontal
-from textual.screen import Screen
+from textual.screen import ModalScreen, Screen
 from textual.widgets import (
     Button,
     DataTable,
@@ -30,12 +30,64 @@ from textual.widgets import (
     TabPane,
 )
 
+from spotify_utils.config import settings_configured, write_secrets
 from spotify_utils.src import file_engine, template_engine
 from spotify_utils.src import user as user_module
 from spotify_utils.src.auth import session
 from spotify_utils.src.playlists import collect_playlists
 
 __version__ = importlib.metadata.version("spotify-utils")
+
+
+# ---------------------------------------------------------------------------
+# Setup screen
+# ---------------------------------------------------------------------------
+
+class SetupScreen(ModalScreen[bool]):
+    """Modal that collects Spotify API credentials and persists them to .secrets.toml."""
+
+    BINDINGS = []  # intentionally no escape — credentials are required to proceed
+
+    def compose(self) -> ComposeResult:
+        with Container(id="setup-dialog"):
+            yield Static(
+                "[bold]Spotify API credentials required[/bold]\n\n"
+                "Create an app at developer.spotify.com/dashboard to obtain your credentials.",
+                id="setup-title",
+            )
+            yield Label("Client ID")
+            yield Input(placeholder="Paste your Client ID", id="setup-client-id")
+            yield Label("Client Secret")
+            yield Input(placeholder="Paste your Client Secret", password=True, id="setup-client-secret")
+            yield Label("Redirect URI")
+            yield Input(value="http://localhost:8080", id="setup-redirect-uri")
+            yield Static("", id="setup-error")
+            yield Horizontal(
+                Button("Save", id="setup-save", variant="primary"),
+                Button("Cancel", id="setup-cancel", variant="default"),
+                id="setup-actions",
+            )
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "setup-save":
+            self._save()
+        elif event.button.id == "setup-cancel":
+            self.app.exit()
+
+    def _save(self) -> None:
+        client_id = self.query_one("#setup-client-id", Input).value.strip()
+        client_secret = self.query_one("#setup-client-secret", Input).value.strip()
+        redirect_uri = self.query_one("#setup-redirect-uri", Input).value.strip()
+
+        if not client_id or not client_secret or not redirect_uri:
+            self.query_one("#setup-error", Static).update(
+                "[red]All fields are required.[/red]"
+            )
+            return
+
+        write_secrets(client_id, client_secret, redirect_uri)
+        session.reset()
+        self.dismiss(True)
 
 
 def _fmt_duration(ms: int) -> str:
@@ -466,6 +518,10 @@ class SpotifyUtilsApp(App[None]):
     ]
 
     _playlists_cache: list[dict] | None = None
+
+    def on_mount(self) -> None:
+        if not settings_configured():
+            self.push_screen(SetupScreen())
 
     def get_playlists(self, force_refresh: bool = False) -> list[dict]:
         """Return cached playlist list, fetching from the API when necessary."""

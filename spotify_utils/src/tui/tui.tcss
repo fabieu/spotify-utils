@@ -15,6 +15,49 @@ SelectOverlay {
     border: none;
 }
 
+/* ── Setup screen ───────────────────────────────────────────────────────── */
+
+SetupScreen {
+    align: center middle;
+}
+
+SetupScreen #setup-dialog {
+    width: 64;
+    height: auto;
+    padding: 2 3;
+    background: $surface;
+    border: thick $primary;
+}
+
+SetupScreen #setup-title {
+    margin-bottom: 1;
+}
+
+SetupScreen Label {
+    margin-top: 1;
+    color: $text-muted;
+}
+
+SetupScreen Input {
+    margin-bottom: 0;
+}
+
+SetupScreen #setup-error {
+    height: auto;
+    margin-top: 1;
+}
+
+SetupScreen #setup-actions {
+    height: auto;
+    margin-top: 1;
+    align-horizontal: right;
+}
+
+SetupScreen #setup-actions Button {
+    width: auto;
+    margin-left: 1;
+}
+
 /* ── Tracks screen ──────────────────────────────────────────────────────── */
 
 PlaylistTracksScreen {
