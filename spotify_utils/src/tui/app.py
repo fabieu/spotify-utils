@@ -32,7 +32,7 @@ from textual.widgets import (
 
 from spotify_utils.src import file_engine, template_engine
 from spotify_utils.src import user as user_module
-from spotify_utils.src.auth import session
+from spotify_utils.src.auth import get_session
 from spotify_utils.src.playlists import collect_playlists
 
 __version__ = importlib.metadata.version("spotify-utils")
@@ -90,6 +90,7 @@ class PlaylistTracksScreen(Screen[None]):
     def _fetch(self) -> None:
         self.app.call_from_thread(self._set_loading, True)
         try:
+            session = get_session()
             tracks_page = session.playlist_tracks(self._playlist_id)
             rows: list[tuple[str, str, str, str, str]] = []
             i = 1
@@ -302,7 +303,7 @@ class ExportTab(Container):
         self.app.call_from_thread(self._set_loading, True, "Collecting playlists…")
         try:
             out_dir.mkdir(parents=True, exist_ok=True)
-            playlists_data = collect_playlists(session, playlist_id)
+            playlists_data = collect_playlists(get_session(), playlist_id)
             self.app.call_from_thread(self._set_status, "Writing file…")
 
             stem = out_dir / f"playlist_export_{uuid.uuid4()}"
@@ -343,6 +344,7 @@ class ExportTab(Container):
 
 def _build_tracks_map(owned: list[dict]) -> dict[str, list[str]]:
     """Build a map of track_id → [playlist_id, ...] across all given playlists."""
+    session = get_session()
     tracks_map: dict[str, list[str]] = {}
     for playlist in owned:
         tracks_page = session.playlist_items(playlist["id"])
@@ -360,6 +362,7 @@ def _build_tracks_map(owned: list[dict]) -> dict[str, list[str]]:
 
 def _build_duplicate_rows(duplicates: dict[str, list[str]]) -> list[tuple[str, str, str]]:
     """Resolve duplicate track/playlist names and return table rows."""
+    session = get_session()
     rows: list[tuple[str, str, str]] = []
     playlist_cache: dict[str, str] = {}
     for tid, pids in duplicates.items():
@@ -470,6 +473,7 @@ class SpotifyUtilsApp(App[None]):
     def get_playlists(self, force_refresh: bool = False) -> list[dict]:
         """Return cached playlist list, fetching from the API when necessary."""
         if self._playlists_cache is None or force_refresh:
+            session = get_session()
             page = session.current_user_playlists()
             playlists: list[dict] = []
             while page:

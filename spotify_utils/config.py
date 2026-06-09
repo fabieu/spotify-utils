@@ -1,7 +1,10 @@
+from pathlib import Path
+
 from dynaconf import Dynaconf, Validator
 
 settings = Dynaconf(
     envvar_prefix="SPOTIFY_UTILS",
+    root_path=Path(__file__).parent,
     settings_files=['settings.toml', '.secrets.toml'],
     load_dotenv=True,
     validators=[

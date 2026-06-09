@@ -1,5 +1,5 @@
-from spotify_utils.src.auth import session
+from spotify_utils.src.auth import get_session
 
 
 def get_details():
-    return session.current_user()
+    return get_session().current_user()

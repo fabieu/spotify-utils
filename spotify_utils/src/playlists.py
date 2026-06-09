@@ -8,7 +8,7 @@ import typer
 from tabulate import tabulate
 
 from spotify_utils.src import user, template_engine, file_engine
-from spotify_utils.src.auth import session
+from spotify_utils.src.auth import get_session
 from spotify_utils.src.enums import OutputFormat, OutputFormatJson
 
 # Initialize Typer
@@ -22,6 +22,7 @@ def list_playlists(
     """
     List all playlists of the user
     """
+    session = get_session()
     playlists = session.current_user_playlists()
     playlists_list = []
     table = {}
@@ -57,7 +58,7 @@ def export(
     """
     Export all playlists of the user (default) or a specific playlist by ID in the specified format.
     """
-    playlists_with_tracks = collect_playlists(session, playlist_id)
+    playlists_with_tracks = collect_playlists(get_session(), playlist_id)
 
     match format:
         case OutputFormat.JSON:
@@ -106,6 +107,7 @@ def fetch_full_playlist(playlist_id: str):
     """
     Return playlist object with all tracks loaded (paginated).
     """
+    session = get_session()
     playlist = session.playlist(playlist_id)
     all_items = []
 
@@ -126,6 +128,7 @@ def fetch_full_playlist(playlist_id: str):
 
 def _get_owned_playlists(current_user: dict) -> list:
     """Return all playlists owned by current_user."""
+    session = get_session()
     owned = []
     playlists = session.current_user_playlists()
     while playlists:
@@ -141,6 +144,7 @@ def _get_owned_playlists(current_user: dict) -> list:
 
 def _build_tracks_map(owned_playlists: list) -> dict:
     """Return a map of track_id → [playlist_id, ...] across all owned playlists."""
+    session = get_session()
     tracks_map = {}
     for playlist in owned_playlists:
         tracks = session.playlist_items(playlist['id'])
@@ -162,6 +166,7 @@ def duplicates(
     """
     Find duplicates in playlists which are owned by the current user
     """
+    session = get_session()
     current_user = user.get_details()
     owned_playlists = _get_owned_playlists(current_user)
     tracks_map = _build_tracks_map(owned_playlists)
