@@ -1,12 +1,20 @@
 <div id="top"></div>
 <!-- PROJECT SHIELDS -->
 
-![PyPI](https://img.shields.io/pypi/v/spotify-utils?style=for-the-badge)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spotify-utils?style=for-the-badge)
-[![GitHub pipeline status](https://img.shields.io/github/actions/workflow/status/fabieu/spotify-utils/build.yml?style=for-the-badge)](https://github.com/fabieu/spotify-utils/actions)
-[![GitHub issues](https://img.shields.io/github/issues-raw/fabieu/spotify-utils?style=for-the-badge)](https://github.com/fabieu/spotify-utils/issues)
-[![GitHub merge requests](https://img.shields.io/github/issues-pr/fabieu/spotify-utils?style=for-the-badge)](https://github.com/fabieu/spotify-utils/pulls)
-[![GitHub](https://img.shields.io/github/license/fabieu/spotify-utils?style=for-the-badge)](https://github.com/fabieu/spotify-utils/blob/main/LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/fabieu/spotify-utils)](https://github.com/fabieu/spotify-utils/releases/latest)
+[![GitHub Issues](https://img.shields.io/github/issues/fabieu/spotify-utils)](https://github.com/fabieu/spotify-utils/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/fabieu/spotify-utils)](https://github.com/fabieu/spotify-utils/pulls)
+[![License](https://img.shields.io/github/license/fabieu/spotify-utils)](https://github.com/fabieu/spotify-utils/blob/main/LICENSE)
+
+[![PyPI Version](https://img.shields.io/pypi/v/spotify-utils)](https://pypi.org/project/spotify-utils/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/spotify-utils)](https://pypi.org/project/spotify-utils/)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fabieu_spotify-utils&metric=alert_status)](https://sonarcloud.io/summary/overall?id=fabieu_spotify-utils)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=fabieu_spotify-utils&metric=security_rating)](https://sonarcloud.io/summary/overall?id=fabieu_spotify-utils)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=fabieu_spotify-utils&metric=reliability_rating)](https://sonarcloud.io/summary/overall?id=fabieu_spotify-utils)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=fabieu_spotify-utils&metric=sqale_rating)](https://sonarcloud.io/summary/overall?id=fabieu_spotify-utils)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=fabieu_spotify-utils&metric=vulnerabilities)](https://sonarcloud.io/summary/overall?id=fabieu_spotify-utils)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=fabieu_spotify-utils&metric=sqale_index)](https://sonarcloud.io/summary/overall?id=fabieu_spotify-utils)
 
 <!-- PROJECT LOGO -->
 <br />
