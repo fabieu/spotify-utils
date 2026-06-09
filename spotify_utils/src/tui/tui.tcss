@@ -117,3 +117,24 @@ DuplicatesTab #dup-actions {
 DuplicatesTab DataTable {
     height: 1fr;
 }
+
+/* ── Unavailable tab ───────────────────────────────────────────────────── */
+
+UnavailableTab {
+    height: 1fr;
+    padding: 1 2;
+}
+
+UnavailableTab #unavail-stats {
+    height: auto;
+    margin-bottom: 1;
+}
+
+UnavailableTab #unavail-actions {
+    height: auto;
+    margin-bottom: 1;
+}
+
+UnavailableTab DataTable {
+    height: 1fr;
+}

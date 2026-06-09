@@ -33,7 +33,7 @@ from textual.widgets import (
 from spotify_utils.src import file_engine, template_engine
 from spotify_utils.src import user as user_module
 from spotify_utils.src.auth import get_session
-from spotify_utils.src.playlists import collect_playlists
+from spotify_utils.src.playlists import collect_playlists, find_unavailable_tracks
 
 __version__ = importlib.metadata.version("spotify-utils")
 
@@ -454,6 +454,84 @@ class DuplicatesTab(Container):
 
 
 # ---------------------------------------------------------------------------
+# Unavailable tab
+# ---------------------------------------------------------------------------
+
+class UnavailableTab(Container):
+    """Scans owned playlists for removed or unavailable (greyed out) tracks."""
+
+    def on_mount(self) -> None:
+        self._scanned = False
+        table = self.query_one(DataTable)
+        table.add_columns("Track", "Artists", "Playlist", "Reason")
+        table.display = False
+        self.query_one("#unavail-loading", LoadingIndicator).display = False
+
+    def compose(self) -> ComposeResult:
+        yield Static(
+            "Click [bold]Scan[/bold] to find removed or unavailable tracks across your owned playlists.",
+            id="unavail-stats",
+        )
+        yield Horizontal(
+            Button("Scan", id="unavail-scan-btn", variant="primary"),
+            id="unavail-actions",
+        )
+        yield LoadingIndicator(id="unavail-loading")
+        yield DataTable(id="unavail-table", cursor_type="row")
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "unavail-scan-btn":
+            self._scan()
+
+    @work(thread=True)
+    def _scan(self) -> None:
+        self.app.call_from_thread(self._set_scanning, True)
+        table = self.query_one(DataTable)
+        self.app.call_from_thread(table.clear)
+        try:
+            current_user = user_module.get_details()
+            owned = [
+                p for p in self.app.get_playlists()
+                if p["owner"]["id"] == current_user["id"]
+            ]
+
+            tracks = find_unavailable_tracks(owned)
+            rows = [
+                (t["name"], t["artists"], t["playlist"], t["reason"])
+                for t in tracks
+            ]
+
+            count = len(tracks)
+            if count > 0:
+                stats = (
+                    f"Found [bold red]{count}[/bold red] unavailable track(s) "
+                    f"across [bold]{len(owned)}[/bold] owned playlist(s)."
+                )
+            else:
+                stats = (
+                    f"[bold green]No unavailable tracks found[/bold green] "
+                    f"across [bold]{len(owned)}[/bold] owned playlist(s)."
+                )
+
+            self.app.call_from_thread(self._update_stats, stats)
+            self.app.call_from_thread(table.add_rows, rows)
+        except Exception as exc:
+            self.app.call_from_thread(self.app.notify, str(exc), severity="error")
+        finally:
+            self.app.call_from_thread(self._set_scanning, False)
+
+    def _set_scanning(self, scanning: bool) -> None:
+        self.query_one("#unavail-loading", LoadingIndicator).display = scanning
+        self.query_one("#unavail-scan-btn", Button).disabled = scanning
+        if not scanning:
+            self._scanned = True
+        self.query_one(DataTable).display = self._scanned and not scanning
+
+    def _update_stats(self, message: str) -> None:
+        self.query_one("#unavail-stats", Static).update(message)
+
+
+# ---------------------------------------------------------------------------
 # Main application
 # ---------------------------------------------------------------------------
 
@@ -464,8 +542,9 @@ class SpotifyUtilsApp(App[None]):
     BINDINGS = [
         Binding("ctrl+q", "quit", "Quit"),
         Binding("ctrl+l", "switch_tab('tab-playlists')", "Playlists", priority=True),
-        Binding("ctrl+e", "switch_tab('tab-export')", "Export", priority=True),
         Binding("ctrl+d", "switch_tab('tab-duplicates')", "Duplicates", priority=True),
+        Binding("ctrl+u", "switch_tab('tab-unavailable')", "Unavailable", priority=True),
+        Binding("ctrl+e", "switch_tab('tab-export')", "Export", priority=True),
     ]
 
     _playlists_cache: list[dict] | None = None
@@ -495,6 +574,8 @@ class SpotifyUtilsApp(App[None]):
                 yield PlaylistsTab()
             with TabPane("Duplicates", id="tab-duplicates"):
                 yield DuplicatesTab()
+            with TabPane("Unavailable", id="tab-unavailable"):
+                yield UnavailableTab()
             with TabPane("Export", id="tab-export"):
                 yield ExportTab()
         yield Footer()

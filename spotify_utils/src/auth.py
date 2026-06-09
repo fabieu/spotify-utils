@@ -6,7 +6,10 @@ from spotipy.oauth2 import SpotifyOAuth
 
 from spotify_utils.config import settings
 
-SCOPES = ["playlist-read-private"]  # Required scopes for the Spotify API
+SCOPES = [
+    "playlist-read-private",
+    "user-read-private"
+]
 
 
 @cache

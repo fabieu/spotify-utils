@@ -158,6 +158,91 @@ def _build_tracks_map(owned_playlists: list) -> dict:
     return tracks_map
 
 
+def find_unavailable_tracks(playlists: list[dict]) -> list[dict]:
+    """
+    Scan the given playlists for tracks that are removed from Spotify or
+    unavailable (greyed out) in the user's market.
+
+    Detection requires market-scoped requests (the user's ISO 3166-1 alpha-2
+    country code, resolved from their profile):
+      - ``item['track']`` is ``None`` → the track was removed from Spotify.
+      - ``track['is_playable']`` is ``False`` → unavailable in the user's market;
+        ``track['restrictions']['reason']`` explains why (market/product/explicit).
+
+    Returns a list of dicts with keys: name, artists, playlist, reason.
+    """
+    session = get_session()
+    market = user.get_details().get('country')
+
+    results: list[dict] = []
+    seen: set[tuple[str, str]] = set()  # (playlist_id, track_id) — collapse repeated copies
+    for playlist in playlists:
+        tracks = session.playlist_items(playlist['id'], market=market)
+        while tracks:
+            for item in tracks['items']:
+                track = item.get('track')
+                if track is None:
+                    results.append({
+                        "name": "(removed track)",
+                        "artists": "",
+                        "playlist": playlist['name'],
+                        "reason": "removed",
+                    })
+                    continue
+                if track.get('is_playable') is False:
+                    track_id = track.get('id')
+                    if track_id:
+                        key = (playlist['id'], track_id)
+                        if key in seen:
+                            continue
+                        seen.add(key)
+                    reason = (track.get('restrictions') or {}).get('reason', "unavailable")
+                    results.append({
+                        "name": track.get('name', ""),
+                        "artists": ", ".join(a['name'] for a in track.get('artists', [])),
+                        "playlist": playlist['name'],
+                        "reason": reason,
+                    })
+            if tracks['next']:
+                tracks = session.next(tracks)
+            else:
+                break
+    return results
+
+
+@app.command()
+def unavailable(
+        verbose: bool = typer.Option(False, "--verbose", "-v"),
+        quiet: bool = typer.Option(False, "--quiet", "-q")
+):
+    """
+    Find tracks that are removed or unavailable (greyed out) in playlists owned by the current user
+    """
+    current_user = user.get_details()
+    owned_playlists = _get_owned_playlists(current_user)
+    unavailable_tracks = find_unavailable_tracks(owned_playlists)
+
+    # Print basic stats, like number of unavailable tracks and searched playlists to console
+    if not quiet:
+        if unavailable_tracks:
+            unavailable_count = typer.style(len(unavailable_tracks), fg=typer.colors.RED)
+        else:
+            unavailable_count = typer.style("0", fg=typer.colors.GREEN)
+
+        typer.echo(f"Found {unavailable_count} unavailable tracks across {len(owned_playlists)} playlists")
+
+    # Print additional information about the unavailable tracks and their playlists
+    if verbose and not quiet and unavailable_tracks:
+        table = {}
+        for entry in unavailable_tracks:
+            table.setdefault("name", []).append(entry['name'])
+            table.setdefault("artists", []).append(entry['artists'])
+            table.setdefault("playlist", []).append(entry['playlist'])
+            table.setdefault("reason", []).append(entry['reason'])
+
+        typer.echo(tabulate(table, headers="keys", showindex=True, tablefmt="simple"))
+
+
 @app.command()
 def duplicates(
         verbose: bool = typer.Option(False, "--verbose", "-v"),
