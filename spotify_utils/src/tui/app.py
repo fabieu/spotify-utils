@@ -567,8 +567,27 @@ class SpotifyUtilsApp(App[None]):
     def action_switch_tab(self, tab_id: str) -> None:
         self.query_one(TabbedContent).active = tab_id
 
+    def on_mount(self) -> None:
+        self._authenticate()
+
+    @work(thread=True)
+    def _authenticate(self) -> None:
+        """Sign in up front so the indicator reflects the (possibly blocking) auth flow."""
+        self.app.call_from_thread(self._set_auth_status, "🔐 Authenticating…")
+        try:
+            get_session()
+            user = user_module.get_details()
+            name = user.get("display_name") or user.get("id", "")
+            self.app.call_from_thread(self._set_auth_status, f"🟢 Signed in as {name}")
+        except Exception as exc:
+            self.app.call_from_thread(self._set_auth_status, f"🔴 Authentication failed — {exc}")
+
+    def _set_auth_status(self, message: str) -> None:
+        self.query_one("#auth-status", Static).update(message)
+
     def compose(self) -> ComposeResult:
         yield Header()
+        yield Static("🔐 Authenticating…", id="auth-status")
         with TabbedContent():
             with TabPane("Playlists", id="tab-playlists"):
                 yield PlaylistsTab()

@@ -25,9 +25,11 @@ Credentials are required for any command that hits the Spotify API: `CLIENT_ID`,
 
 ## Architecture
 
-**Entry point:** `spotify_utils/main.py` builds the root Typer `app`, registers the `playlists` sub-app, and defines `version` and `tui` commands. `pyproject.toml` maps the `spotify-utils` script to `spotify_utils.main:app`.
+**Entry point:** `spotify_utils/main.py` builds the root Typer `app`, registers the `playlists` sub-app, and defines `version` and `tui` commands. `pyproject.toml` maps the `spotify-utils` script to `spotify_utils.main:main` — a thin wrapper around `app()` that catches `AuthenticationError` (from `src/auth.py`) and turns it into a stderr message + exit code 1 instead of a traceback.
 
-**Lazy authentication (important invariant):** `src/auth.py` exposes `get_session() -> spotipy.Spotify`, a `@cache`-memoized factory. Credentials are read on the *first call*, not at import time, so `--help` and `version` work without any config. **Never call `get_session()` (or otherwise read `settings.CLIENT_ID` etc.) at module level / import time** — doing so reintroduces eager auth and breaks `--help`. Inside functions, bind `session = get_session()` once and reuse it.
+**Lazy authentication (important invariant):** `src/auth.py` exposes `get_session() -> spotipy.Spotify`, a memoized factory backed by a module-level `_session` + `_session_lock` (double-checked locking, **not** `@cache` — `lru_cache` doesn't serialize concurrent first calls, and the TUI calls `get_session()` from several worker threads at once, which would launch multiple sign-in flows). Credentials are read on the *first call*, not at import time, so `--help` and `version` work without any config. **Never call `get_session()` (or otherwise read `settings.CLIENT_ID` etc.) at module level / import time** — doing so reintroduces eager auth and breaks `--help`. Inside functions, bind `session = get_session()` once and reuse it.
+
+`get_session()` also recovers from expired refresh tokens: on first call it validates the cached token, and on an `invalid_grant` it discards the dead token and re-runs the sign-in flow once (never retries the failed refresh). If that re-sign-in fails it raises `AuthenticationError` — a UI-agnostic exception the CLI wrapper and TUI present in their own way. Don't reintroduce `typer.echo`/`typer.Exit` into `auth.py`; it's shared with the TUI, where Typer's exit machinery is meaningless.
 
 **Spotify pagination pattern:** the Spotify API returns paginated results. The repeated idiom across the codebase is `while page: ...; page = session.next(page) if page['next'] else break`. Preserve this when adding new API traversals.
 

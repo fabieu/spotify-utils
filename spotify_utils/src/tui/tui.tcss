@@ -15,6 +15,22 @@ SelectOverlay {
     border: none;
 }
 
+Screen {
+    layers: base overlay;
+}
+
+/* Overlay only the right end of the header row so the centered title/version
+   stays visible and no extra height is added. */
+#auth-status {
+    layer: overlay;
+    dock: right;
+    width: auto;
+    height: 1;
+    padding: 0 2;
+    background: $panel;
+    color: $text-muted;
+}
+
 /* ── Tracks screen ──────────────────────────────────────────────────────── */
 
 PlaylistTracksScreen {
